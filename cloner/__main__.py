@@ -48,8 +48,6 @@ def sort(bundle_name, url, rate_limit_buffer):
     Sort the downloaded programs by the slot they were last executed, starting
     from the most recent slot.
     """
-    print(f"Sorting downloaded programs in bundle {bundle_name}...")
-    print(f"Using RPC URL: {url}")
     do_sort(bundle_name, url, rate_limit_buffer)
 
 cli.add_command(clone)
