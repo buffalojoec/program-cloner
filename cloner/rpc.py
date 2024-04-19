@@ -153,7 +153,6 @@ class SolanaRPC(RPCClient):
                 "limit": 1
             }
         )
-        print(res)
         if len(res) == 0:
             print("Slot: 0")
             return 0
