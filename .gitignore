@@ -1,0 +1,6 @@
+__pycache__/
+env
+test-ledger
+
+bundles/*
+!bundles/bundles.md
