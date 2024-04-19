@@ -40,13 +40,21 @@ BPF_LOADER_3_PROGRAMDATA_FILTER = {
 def clone(bundle_name, url, rate_limit_buffer):
     rpc = SolanaRPC(url)
     version = rpc.get_version()
+    now = time.localtime()
 
     print("Downloading all Solana programs...")
     print(f"    RPC URL         : {url}")
     print(f"    Solana Version  : {version}")
     print(f"    Bundle Name     : {bundle_name}")
+    print(f"    Date            : {time.strftime('%Y-%m-%d', now)}")
 
     init_bundle(bundle_name)
+
+    # Write both the date and the Solana version to "version.txt".
+    version_file = bundle_full_path(bundle_name) / "version.txt"
+    with open(version_file, "w") as version_file:
+        version_file.write(f"Date: {time.strftime('%Y-%m-%d', now)}\n")
+        version_file.write(f"Solana Version: {version}\n")
 
     # BPF Loader Program Accounts.
     print("Downloading BPF Loader program accounts...")
