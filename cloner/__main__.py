@@ -2,6 +2,7 @@
 
 import click
 from .clone import clone as do_clone
+from .profile import profile_slots as do_profile_slots
 from .sort import sort as do_sort
 
 @click.group()
@@ -50,8 +51,30 @@ def sort(bundle_name, url, rate_limit_buffer):
     """
     do_sort(bundle_name, url, rate_limit_buffer)
 
+@click.command()
+@click.argument("profile_name", type=str)
+@click.option(
+    "--url",
+    type=str,
+    default="http://localhost:8899",
+    help="RPC URL to use for queries.",
+)
+@click.option(
+    "--rate-limit-buffer",
+    type=int,
+    default=0,
+    help="Time delay between RPC query batches to avoid rate limiting.",
+)
+def profile_slots(profile_name, url, rate_limit_buffer):
+    """
+    Profile all Solana Loader V3 programs based on their deployment slot, using
+    the provided RPC URL.
+    """
+    do_profile_slots(profile_name, url, rate_limit_buffer)
+
 cli.add_command(clone)
 cli.add_command(sort)
+cli.add_command(profile_slots)
 
 if __name__ == "__main__":
     cli()

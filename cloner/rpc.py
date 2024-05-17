@@ -7,7 +7,7 @@ import requests
 import sys
 import time
 
-ELF_MAGIC = b"\x7fELF"
+from cloner.filters import ELF_MAGIC
 
 class RPCError(Exception):
     """
@@ -107,6 +107,7 @@ class SolanaRPC(RPCClient):
         pubkeys: Iterable[str],
         rate_limit_buffer,
         offset: int = 0,
+        length: int = 1 << 31,
     ) -> Generator[Tuple[str, bytes], None, None]:
         batch = 100
         pubkeys = iter(pubkeys) # Program Data keys
@@ -114,17 +115,29 @@ class SolanaRPC(RPCClient):
             chunk = list(itertools.islice(pubkeys, batch))
             if len(chunk) == 0:
                 break
-            for (program_id, elf) in self._get_multiple_programs_batch(chunk, offset):
-                if elf[:4] != ELF_MAGIC:
-                    print(f"WARN: {program_id} is not a valid ELF", sys.stderr)
+            for (program_id, elf) in self._get_multiple_programs_batch(
+                chunk,
+                offset,
+                length,
+            ):
                 yield (program_id, elf)
             time.sleep(rate_limit_buffer)
 
     def _get_multiple_programs_batch(
-        self, pubkeys: Iterable[str], offset: int = 0
+        self,
+        pubkeys: Iterable[str],
+        offset: int = 0,
+        length: int = 1 << 31,
     ) -> Generator[Tuple[str, bytes], None, None]:
-        data_slice = {"offset": offset, "length": 1 << 31}
-        result = self.request("getMultipleAccounts", pubkeys, {"dataSlice": data_slice})
+        data_slice = {"offset": offset, "length": length}
+        result = self.request(
+            "getMultipleAccounts",
+            pubkeys,
+            {
+                "encoding": "base64",
+                "dataSlice": data_slice,
+            },
+        )
         for idx, item in enumerate(result["value"]):
             if item is None:
                 print(f"WARN: {pubkeys[idx]} not found!", sys.stderr)

@@ -21,3 +21,9 @@ Sort downloaded programs by the last slot they were invoked:
 ```shell
 python -m cloner sort
 ```
+
+Profile deployment slots of all Loader V3 programs:
+
+```shell
+python -m cloner profile-slots
+```

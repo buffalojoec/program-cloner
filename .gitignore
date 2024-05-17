@@ -4,3 +4,6 @@ test-ledger
 
 bundles/*
 !bundles/bundles.md
+
+profiles/*
+!profiles/profiles.md
