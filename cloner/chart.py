@@ -8,12 +8,12 @@ def chart_profiled_slots(profile_name):
     print("Creating chart of Loader V3 program slots...")
     print(f"    Profile Name    : {profile_name}")
 
-    csv_path = profile_full_path(profile_name) / "bpf_loader_3_slots.csv"
+    csv_path = profile_full_path(profile_name) / "bpf_loader_3_keys_with_slots.csv"
     output_path = profile_full_path(profile_name) / "bpf_loader_3_slots.png"
 
     df = pd.read_csv(csv_path, header=None, names=['Program ID', 'Deployment Slot'])
 
-    num_bins = 10
+    num_bins = 40
     min_slot = df['Deployment Slot'].min()
     max_slot = df['Deployment Slot'].max()
     bin_edges = np.linspace(min_slot, max_slot, num_bins + 1)

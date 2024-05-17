@@ -129,10 +129,15 @@ def clone(bundle_name, url, rate_limit_buffer):
             sys.stderr,
         )
     print(f"Found {len(bpf_loader_3_elfs)} BPF Loader 3 ELFs")
-    for i, (_, elf) in enumerate(bpf_loader_3_elfs):
-        program_id = bpf_loader_3_keys[i]
-        dir = bundle_full_path(bundle_name) / "bpf_loader_3"
-        dir.mkdir(parents=True, exist_ok=True)
-        file_name = os.path.join(dir, f"{program_id}.elf")
-        with open(file_name, "wb") as program_file:
-            program_file.write(elf)
+    for (data_key, elf) in bpf_loader_3_elfs:
+        # Find the program key associated with the data key.
+        program_key = None
+        for (program_key, data_key_) in bpf_loader_3_keys_with_data_keys:
+            if data_key == data_key_:
+                break
+        if program_key is not None:
+            dir = bundle_full_path(bundle_name) / "bpf_loader_3"
+            dir.mkdir(parents=True, exist_ok=True)
+            file_name = os.path.join(dir, f"{program_id}.elf")
+            with open(file_name, "wb") as program_file:
+                program_file.write(elf)

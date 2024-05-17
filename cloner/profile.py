@@ -47,7 +47,7 @@ def profile_slots(profile_name, url, rate_limit_buffer):
         for k in bpf_loader_3_keys
     ]
     bpf_loader_3_data_keys = [
-        dk for (k, dk) in bpf_loader_3_keys_with_data_keys
+        dk for (_, dk) in bpf_loader_3_keys_with_data_keys
     ]
     write_to_profile_csv(
         profile_name,
@@ -55,31 +55,31 @@ def profile_slots(profile_name, url, rate_limit_buffer):
         [[str(k), str(dk)] for (k, dk) in bpf_loader_3_keys_with_data_keys],
     )
 
-    # BPF Loader 3 Slots.
     print("Profiling BPF Loader 3 slots...")
     time.sleep(rate_limit_buffer)
-    bpf_loader_3_slots = list(rpc.get_multiple_programs(
+
+    # BPF Loader 3 Program Data accounts with slots.
+    bpf_loader_3_data_keys_with_slots = list(rpc.get_multiple_programs(
         bpf_loader_3_data_keys,
         rate_limit_buffer,
         offset=4,
         length=8,
     ))
-    if len(bpf_loader_3_slots) != len(bpf_loader_3_data_keys):
-        print(
-            f"Expected {len(bpf_loader_3_data_keys)} BPF Loader 3 slots, but "
-            f"found {len(bpf_loader_3_slots)}",
-            sys.stderr,
-        )
-    print(f"Found {len(bpf_loader_3_slots)} BPF Loader 3 slots")
+    write_to_profile_csv(
+        profile_name,
+        "bpf_loader_3_data_keys_with_slots.csv",
+        [[str(k), le_to_u64(s)] for (k, s) in bpf_loader_3_data_keys_with_slots],
+    )
+
+    # BPF Loader 3 Program accounts with slots.
     bpf_loader_3_keys_with_slots = [
-        (k, slot)
-        for k, slot in zip(
-            bpf_loader_3_keys,
-            [le_to_u64(s) for (_, s) in bpf_loader_3_slots],
-        )
+        (str(k), le_to_u64(s))
+        for (k, kdk) in bpf_loader_3_keys_with_data_keys
+        for (ddk, s) in bpf_loader_3_data_keys_with_slots
+        if kdk == ddk
     ]
     write_to_profile_csv(
         profile_name,
-        "bpf_loader_3_slots.csv",
+        "bpf_loader_3_keys_with_slots.csv",
         [[str(k), s] for (k, s) in bpf_loader_3_keys_with_slots],
     )
