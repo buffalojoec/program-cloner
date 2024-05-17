@@ -27,3 +27,9 @@ Profile deployment slots of all Loader V3 programs:
 ```shell
 python -m cloner profile-slots
 ```
+
+Chart profiled deployment slots.
+
+```shell
+python -m cloner chart-profiled-slots
+```

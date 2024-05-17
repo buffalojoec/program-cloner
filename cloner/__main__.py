@@ -1,6 +1,7 @@
 # Solana program cloner CLI
 
 import click
+from .chart import chart_profiled_slots as do_chart_profiled_slots
 from .clone import clone as do_clone
 from .profile import profile_slots as do_profile_slots
 from .sort import sort as do_sort
@@ -72,9 +73,18 @@ def profile_slots(profile_name, url, rate_limit_buffer):
     """
     do_profile_slots(profile_name, url, rate_limit_buffer)
 
+@click.command()
+@click.argument("profile_name", type=str)
+def chart_profiled_slots(profile_name):
+    """
+    Create a scatter plot of deployment slots for each program ID.
+    """
+    do_chart_profiled_slots(profile_name)
+
 cli.add_command(clone)
 cli.add_command(sort)
 cli.add_command(profile_slots)
+cli.add_command(chart_profiled_slots)
 
 if __name__ == "__main__":
     cli()

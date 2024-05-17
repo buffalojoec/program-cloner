@@ -1,4 +1,6 @@
 base58==2.1.1
 click==8.0.4
+matplotlib==3.9.0
+pandas==2.2.2
 requests==2.27.1
 solders==0.21.0
