@@ -68,7 +68,10 @@ def profile_slots(profile_name, url, rate_limit_buffer):
     write_to_profile_csv(
         profile_name,
         "bpf_loader_3_data_keys_with_slots.csv",
-        [[str(k), le_to_u64(s)] for (k, s) in bpf_loader_3_data_keys_with_slots],
+        sorted(
+            [[str(k), le_to_u64(s)] for (k, s) in bpf_loader_3_data_keys_with_slots],
+            key=lambda x: x[1],
+        ),
     )
 
     # BPF Loader 3 Program accounts with slots.
@@ -81,5 +84,8 @@ def profile_slots(profile_name, url, rate_limit_buffer):
     write_to_profile_csv(
         profile_name,
         "bpf_loader_3_keys_with_slots.csv",
-        [[str(k), s] for (k, s) in bpf_loader_3_keys_with_slots],
+        sorted(
+            [[str(k), s] for (k, s) in bpf_loader_3_keys_with_slots],
+            key=lambda x: x[1],
+        ),
     )
